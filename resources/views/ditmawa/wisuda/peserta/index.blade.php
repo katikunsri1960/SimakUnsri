@@ -1,4 +1,4 @@
-@extends('layouts.dppti')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Peserta Wisuda
 @endsection
@@ -165,7 +165,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('dppti.wisuda.peserta.data')}}`,
+        url: `{{route('ditmawa.wisuda.peserta.data')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -191,7 +191,7 @@ function getData()
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
                     // console.log(item.id);
-                    var url_berkas = '{{route('dppti.wisuda.peserta.formulir', ['id' => 'ID'])}}';
+                    var url_berkas = '{{route('ditmawa.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     
@@ -269,7 +269,7 @@ function getData()
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content rounded-3">
                                         <form method="POST"
-                                            action="{{ route('bak.wisuda.peserta.update-foto') }}"
+                                            action="{{ route('ditmawa.wisuda.peserta.update-foto') }}"
                                             enctype="multipart/form-data">
                                             @csrf
 
@@ -337,7 +337,7 @@ function getData()
                                     <div class="modal-content rounded-3">
 
                                         <form method="POST"
-                                            action="{{ route('bak.wisuda.peserta.update-predikat') }}">
+                                            action="{{ route('ditmawa.wisuda.peserta.update-predikat') }}">
                                             @csrf
 
                                             <input type="hidden" name="id" value="${item.id}">
@@ -628,7 +628,7 @@ function submitPredikat(id) {
         if (!isConfirm) return;
 
         $.ajax({
-            url: `{{ route('bak.wisuda.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
+            url: `{{ route('ditmawa.wisuda.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -682,7 +682,7 @@ function approvePeserta(id) {
     }, function (isConfirm) {
         if (isConfirm) {
             $.ajax({
-                url: `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
+                url: `{{ route('ditmawa.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -739,7 +739,7 @@ function submitDecline(id) {
         if (isConfirmed) {
             // console.log('alasan_pembatalan:', alasan);
             $.ajax({
-                url: `{{route('bak.wisuda.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
+                url: `{{route('ditmawa.wisuda.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

@@ -31959,3 +31959,18 @@ img.away, img.busy, img.offline, img.online {
   z-index: -1; }
 
 /*# sourceMappingURL=style.css.map */
+
+
+/* Menargetkan teks span agar menjadi putih saat menu active / hover / menu-open */
+.sidebar-menu > li:hover > a > span, 
+.sidebar-menu > li:active > a > span, 
+.sidebar-menu > li.active > a > span,
+.sidebar-menu > li.menu-open > a > span {
+    color: #ffffff !important;
+}
+
+/* Memastikan ikon panah kanan juga ikut berwarna putih */
+.sidebar-menu > li.active > a > .pull-right-container > i,
+.sidebar-menu > li.menu-open > a > .pull-right-container > i {
+    color: #ffffff !important;
+}

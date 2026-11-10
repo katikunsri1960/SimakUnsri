@@ -1,4 +1,4 @@
-@extends('layouts.dppti')
+@extends('layouts.ditmawa')
 @section('title')
 Transkrip Nilai
 @endsection
@@ -251,7 +251,7 @@ Transkrip Nilai
             width: '100%',
             minimumInputLength: 3,
             ajax: {
-                url: "{{route('dppti.transkrip-nilai.search')}}",
+                url: "{{route('ditmawa.transkrip-nilai.search')}}",
                 type: "GET",
                 dataType: 'json',
                 delay: 250,
@@ -279,7 +279,7 @@ Transkrip Nilai
 
         function checkSync(id_batch) {
             $.ajax({
-                url: '{{ route('dppti.check-sync') }}',
+                url: '{{ route('ditmawa.check-sync') }}',
                 type: 'GET',
                 data: {
                     id_batch: id_batch
@@ -323,7 +323,7 @@ Transkrip Nilai
                     swal('Peringatan', 'NIM / Nama tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
-                        url: '{{route('dppti.transkrip-nilai.get')}}',
+                        url: '{{route('ditmawa.transkrip-nilai.get')}}',
                         type: 'GET',
                         data: {
                             nim: nim
@@ -469,7 +469,7 @@ Transkrip Nilai
                                 `);
 
                                 response.akm.forEach(function (akm, index) {
-                                    var url = '{{ route("dppti.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
+                                    var url = '{{ route("ditmawa.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
                                     url = url.replace(':id_reg', response.riwayat.id_registrasi_mahasiswa);
                                     url = url.replace(':semester', akm.id_semester);
 

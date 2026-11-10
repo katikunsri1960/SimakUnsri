@@ -1,4 +1,4 @@
-@extends('layouts.dppti')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Pengajuan Cuti
 @endsection
@@ -10,7 +10,7 @@ Daftar Pengajuan Cuti
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('ditmawa')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Pengajuan Cuti</li>
                         <li class="breadcrumb-item active" aria-current="page">Daftar</li>
                     </ol>
@@ -27,7 +27,7 @@ Daftar Pengajuan Cuti
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
                         <!-- Modal trigger button -->
-                        <form action="{{ route('dppti.pengajuan-cuti') }}" method="get" id="semesterForm">
+                        <form action="{{ route('ditmawa.pengajuan-cuti') }}" method="get" id="semesterForm">
                             <div class="mb-3">
                                 <label for="semester_view" class="form-label">Semester</label>
                                 <select
@@ -68,7 +68,7 @@ Daftar Pengajuan Cuti
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
-                                @include('dppti.pengajuan-cuti.pembatalan-cuti')
+                                @include('ditmawa.pengajuan-cuti.pembatalan-cuti')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>

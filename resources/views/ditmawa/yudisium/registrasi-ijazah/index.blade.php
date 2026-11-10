@@ -1,4 +1,4 @@
-@extends('layouts.dppti')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Registrasi Ijazah
 @endsection
@@ -26,7 +26,7 @@ Daftar Registrasi Ijazah
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
-                        <form action="{{route('dppti.yudisium.registrasi-ijazah.index')}}" method="get" id="semesterForm">
+                        <form action="{{route('ditmawa.yudisium.registrasi-ijazah.index')}}" method="get" id="semesterForm">
                             <label for="id_semester" class="form-label">Semester</label>
                             <select name="id_semester" id="id_semester" class="form-select"
                                 onchange="document.getElementById('semesterForm').submit();">

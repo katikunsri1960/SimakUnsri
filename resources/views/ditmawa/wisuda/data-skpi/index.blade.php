@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.ditmawa')
 @section('title')
 Data SKPI Mahasiswa
 @endsection
@@ -173,7 +173,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{ route('bak.skpi.data.get-data') }}`,
+        url: `{{ route('ditmawa.skpi.data.get-data') }}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -215,7 +215,7 @@ function getData()
                         `<div class="text-start">${item.nama_prodi}</div>`,
                         nomorSuratButton,
                         `<div class="text-center">
-                            <a href="{{ route('bak.skpi.data.detail', ':id') }}"
+                            <a href="{{ route('ditmawa.skpi.data.detail', ':id') }}"
                                 class="btn btn-sm btn-primary"
                                 target="_self"
                                 onclick="this.href=this.href.replace(':id','${item.id}')"><i class="fa fa-eye"></i> 
@@ -300,7 +300,7 @@ function simpanNomorSurat()
         }
 
         $.ajax({
-            url: '{{ route("bak.skpi.update-nomor-surat") }}',
+            url: '{{ route("ditmawa.skpi.update-nomor-surat") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -365,7 +365,7 @@ function simpanNomorSurat()
         }
 
         $.ajax({
-            url: '{{ route("bak.skpi.update-nomor-surat") }}',
+            url: '{{ route("ditmawa.skpi.update-nomor-surat") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -424,7 +424,7 @@ function downloadPdf()
         return;
     }
 
-    var baseUrl = '{{ route('bak.skpi.download-pdf') }}';
+    var baseUrl = '{{ route('ditmawa.skpi.download-pdf') }}';
     var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
             '&prodi=' + encodeURIComponent(prodi) +
             '&periode=' + encodeURIComponent(p_wisuda);
@@ -436,7 +436,7 @@ function downloadPdf()
 function showDetail(id)
 {
     $.ajax({
-        url: `{{ route('bak.skpi.data.detail', ['id' => 'ID']) }}`.replace('ID', id),
+        url: `{{ route('ditmawa.skpi.data.detail', ['id' => 'ID']) }}`.replace('ID', id),
         type: 'GET',
 
         success: function(response){

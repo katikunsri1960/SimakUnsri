@@ -258,7 +258,9 @@
                         </ul>
                     </li>
 
-                    <li class="treeview {{request()->routeIs('ditmawa.skpi*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{ request()->routeIs('ditmawa.skpi.bidang.*') || 
+                                            request()->routeIs('ditmawa.skpi.sub-bidang.*') ||
+                                            request()->routeIs('ditmawa.skpi.jenis.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i class="fa fa-file"></i>
                             <span>Data Isian SKPI</span>
@@ -273,7 +275,7 @@
                                     Bidang SKPI
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('ditmawa.skpi.sub-bidang.index') || request()->routeIs('ditmawa.skpi.bidang.*') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('ditmawa.skpi.sub-bidang.index')  ? 'active' : ''}}">
                                 <a href="{{route('ditmawa.skpi.sub-bidang.index')}}">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Sub Bidang SKPI
@@ -359,8 +361,10 @@
 
 
                     <li class="header">LAIN-LAIN</li>
-                    <li class="treeview {{ request()->routeIs('ditmawa.presiden-mahasiswa.*') ? 'active menu-open' : '' }}">
-                        <a href="#">
+                    <li class="treeview {{ request()->routeIs('ditmawa.presiden-mahasiswa.kandidat.*') ||
+                                            request()->routeIs('ditmawa.presiden-mahasiswa.hasil.*')  ? 'active menu-open' : '' }}">
+                        <a href="#" class="{{ request()->routeIs('ditmawa.presiden-mahasiswa.kandidat.*') ||
+                                            request()->routeIs('ditmawa.presiden-mahasiswa.hasil.*') ? 'text-white' : '' }}">
                             <i class="icon-User"><span class="path1"></span><span class="path2"></span></i>
                             <span>Presiden Mahasiswa</span>
                             <span class="pull-right-container">

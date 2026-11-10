@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Transkrip Wisudawan
 @endsection
@@ -134,7 +134,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('bak.wisuda.peserta.data_approved_transkrip')}}`,
+        url: `{{route('ditmawa.wisuda.peserta.data_approved_transkrip')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -149,7 +149,7 @@ function getData()
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
-                    var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
+                    var url_berkas = '{{route('ditmawa.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
@@ -206,7 +206,7 @@ function downloadPdf()
         return;
     }
 
-    var baseUrl = '{{ route('bak.wisuda.transkrip.download-pdf') }}';
+    var baseUrl = '{{ route('ditmawa.wisuda.transkrip.download-pdf') }}';
     var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
             '&prodi=' + encodeURIComponent(prodi) +
             '&angkatan=' + encodeURIComponent(angkatan) +

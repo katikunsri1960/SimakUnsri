@@ -76,12 +76,19 @@ class LainLainController extends Controller
         $semester_aktif = SemesterAktif::first()->id_semester;
 
         // Ambil riwayat pendidikan mahasiswa yang sedang login
-        $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->first();
+        $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg_mhs)->first();
 
         if (!$riwayat) {
             return redirect()
                 ->back()
                 ->with('error', 'Data riwayat pendidikan mahasiswa Anda tidak ditemukan!');
+        }
+
+        // Perbaikan: gunakan function is_null() standar PHP
+        if (!is_null($riwayat->id_jenis_keluar)) {
+            return redirect()
+                ->back()
+                ->with('error', 'Anda tidak berhak memilih karena status mahasiswa Anda sudah lulus / tidak aktif!');
         }
 
         // Proteksi server-side: Cek jika mahasiswa sudah vote pada semester aktif
