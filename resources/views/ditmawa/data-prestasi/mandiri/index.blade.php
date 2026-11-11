@@ -201,7 +201,7 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
 
                                     {{-- Kolom Cabang --}}
                                     <td class="text-start align-middle">
-                                        {{ $d->nama_prestasi }}
+                                        {{ $d->cabang }}
                                     </td>
 
                                     {{-- Kolom Prestasi --}}
@@ -292,7 +292,7 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
                                                 <i class="fa fa-eye"></i>
                                             </a>
 
-                                            @if($d->feeder == 0 && $d->simkatmawa == 0 && $d->pdunsri == 0)
+                                            @if(is_null($d->cabang) || ($d->feeder == 0 && $d->simkatmawa == 0 && $d->pdunsri == 0))
                                                 {{-- Tombol Edit (Hanya tampil jika BELUM Verified) --}}
                                                 <a href="{{ route('ditmawa.data-prestasi.mandiri.edit', $d->id_prestasi) }}" class="btn-action-icon btn-action-edit" title="Edit Data">
                                                     <i class="fa fa-pencil"></i>
