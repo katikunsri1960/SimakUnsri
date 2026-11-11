@@ -70,6 +70,7 @@ class PdUnsriUploadController extends Controller
             'nim'               => $nim,
             'nama_mahasiswa'    => strtoupper($d->nama_mahasiswa ?? ''),
             'nama_prestasi'     => $d->nama_prestasi,
+            'cabang'            => $d->cabang,
             'jenis_prestasi'    => $d->nama_jenis_prestasi ?? 'Lain-lain',
             'kategori_prestasi' => 'Mandiri',
             'penyelenggara'     => $d->penyelenggara,

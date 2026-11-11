@@ -46,7 +46,7 @@
                 {{-- Nama Cabang & Peringkat --}}
                 <div class="col-md-8 mb-3">
                     <label class="form-label fw-bold">Nama Cabang</label>
-                    <div class="form-control bg-light text-dark border-0">{{ $prestasi->nama_prestasi }}</div>
+                    <div class="form-control bg-light text-dark border-0">{{ $prestasi->cabang }}</div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label fw-bold">Peringkat</label>
