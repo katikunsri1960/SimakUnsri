@@ -387,7 +387,14 @@ class SimkatmawaUploadController extends Controller
                 // TAHAP 3: EXECUTE PUSH TO PDUNSRI (MEMAKAI ID PRESTASI TERBARU)
                 // =============================================================
                 if ($isFeederSuccess && $isSimkatmawaSuccess) {
-                    $semuaPrestasiAktivitas = PrestasiMahasiswa::where('id_aktivitas', $d->id_aktivitas)->get();
+                    $semuaPrestasiAktivitas = PrestasiMahasiswa::with([
+                            'riwayat_pendidikan',
+                            'aktivitas_mahasiswa.anggota_aktivitas',
+                            'aktivitas_mahasiswa.bimbing_mahasiswa'
+                        ])
+                        ->where('id_aktivitas', $d->id_aktivitas)
+                        ->get();
+
                     $allPdUnsriOk = true;
 
                     foreach ($semuaPrestasiAktivitas as $itemPrestasi) {

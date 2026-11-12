@@ -156,7 +156,9 @@ class BiodataController extends Controller
                         $id_test = null;
                 }
 
-                $riwayat_pendidikan_terbaru = $riwayat_pendidikan->sortByDesc('tanggal_daftar')->first();
+                $riwayat_pendidikan_terbaru = $riwayat_pendidikan->where('id_registrasi_mahasiswa', $id_reg)
+                        ->sortByDesc('tanggal_daftar')
+                        ->first();
 
                 $beasiswa = BeasiswaMahasiswa::with('jenis_beasiswa')
                         ->where('id_registrasi_mahasiswa', $id_reg)->first();

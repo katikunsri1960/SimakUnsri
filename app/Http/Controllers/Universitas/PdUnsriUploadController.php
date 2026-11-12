@@ -14,7 +14,20 @@ class PdUnsriUploadController extends Controller
      */
     public function uploadSinglePrestasi(PrestasiMahasiswa $d): array
     {
+        $riwayat = $d->riwayat_pendidikan;
         $nim = optional($d->riwayat_pendidikan)->nim ?? 'UNKNOWN';
+        
+        // Fallback: ambil dari kolom prestasi dulu, jika null ambil dari riwayat_pendidikan
+        $idMahasiswa = $d->id_mahasiswa ?? optional($riwayat)->id_mahasiswa;
+
+        // Validasi awal sebelum menembak API PDUNSRI
+        if (empty($idMahasiswa)) {
+            return [
+                'error_code' => 422,
+                'error_desc' => "ID Mahasiswa (UUID Feeder) untuk NIM {$nim} belum ditemukan di tabel Prestasi maupun Riwayat Pendidikan."
+            ];
+        }
+
         $aktivitas = $d->aktivitas_mahasiswa;
 
         Log::info("ENTER uploadSinglePrestasi PDUNSRI [NIM: {$nim}]");
@@ -68,7 +81,7 @@ class PdUnsriUploadController extends Controller
         $record = [
             'id_prestasi'       => $d->id_prestasi,
             'id_aktivitas'      => $d->id_aktivitas,
-            'id_mahasiswa'      => $d->id_mahasiswa,
+            'id_mahasiswa'      => $idMahasiswa, // <--- Menggunakan hasil fallback
             'nim'               => $nim,
             'nama_mahasiswa'    => strtoupper($d->nama_mahasiswa ?? ''),
             'nama_prestasi'     => $d->nama_prestasi,
