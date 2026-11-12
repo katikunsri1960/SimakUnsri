@@ -130,9 +130,10 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA, PDUNSRI & FEEDER DIKTI)
                                 <thead>
                                     <tr>
                                         <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">Status Feeder</th>
-                                        <th class="text-center align-middle">Status SIMKATMAWA</th>
-                                        <th class="text-center align-middle">Status PDUNSRI</th>
+                                        <th class="text-center align-middle">Status Sync</th>
+                                        <th class="text-center align-middle">Feeder</th>
+                                        <th class="text-center align-middle">SIMKATMAWA</th>
+                                        <th class="text-center align-middle">PDUNSRI</th>
                                         <th class="text-center align-middle">NIM</th>
                                         <th class="text-center align-middle">Nama Mahasiswa</th>
                                         <th class="text-center align-middle">Program Studi</th>
@@ -209,6 +210,7 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA, PDUNSRI & FEEDER DIKTI)
 
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
+                    html += '<td class="text-center">' + item.status_sync + '</td>';
                     html += '<td class="text-center">' + statusFeeder + '</td>';
                     html += '<td class="text-center">' + statusSimkatmawa + '</td>';
                     html += '<td class="text-center">' + statusPdunsri + '</td>';
