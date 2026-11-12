@@ -82,7 +82,8 @@
                             <option value="3" {{ old('peringkat', $prestasi->peringkat) == '3' ? 'selected' : '' }}>Juara 3</option>
                             <option value="4" {{ old('peringkat', $prestasi->peringkat) == '4' ? 'selected' : '' }}>Harapan 1</option>
                             <option value="5" {{ old('peringkat', $prestasi->peringkat) == '5' ? 'selected' : '' }}>Harapan 2</option>
-                            <option value="9" {{ old('peringkat', $prestasi->peringkat) == '9' ? 'selected' : '' }}>Finalis / Peserta</option>
+                            <option value="9" {{ old('peringkat', $prestasi->peringkat) == '9' ? 'selected' : '' }}>Apresiasi Kejuaraan / Penghargaan Tambahan / Juara Umum</option>
+                            <option value="0" {{ old('peringkat', $prestasi->peringkat) == '0' ? 'selected' : '' }}>Finalis / Peserta</option>
                         </select>
                     </div>
 

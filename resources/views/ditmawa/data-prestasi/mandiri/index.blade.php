@@ -206,7 +206,28 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
 
                                     {{-- Kolom Prestasi --}}
                                     <td class="text-start align-middle fw-semibold">
-                                        Juara {{ $d->peringkat }}
+                                        @php
+                                            $rawPeringkat = $d->peringkat;
+                                            if (str_contains($rawPeringkat, '1')) {
+                                                $peringkatText = 'Juara 1';
+                                            } elseif (str_contains($rawPeringkat, '2')) {
+                                                $peringkatText = 'Juara 2';
+                                            } elseif (str_contains($rawPeringkat, '3')) {
+                                                $peringkatText = 'Juara 3';
+                                            } elseif (str_contains($rawPeringkat, '4')) {
+                                                $peringkatText = 'Harapan 1';
+                                            } elseif (str_contains($rawPeringkat, '5')) {
+                                                $peringkatText = 'Harapan 2';
+                                            } elseif (str_contains($rawPeringkat, '6')) {
+                                                $peringkatText = 'Harapan 3';
+                                            } elseif (str_contains($rawPeringkat, '9')) {
+                                                $peringkatText = 'Apresiasi Kejuaraan/Penghargaan Tambahan/Juara Umum';
+                                            } else {
+                                                $peringkatText = 'Peserta';
+                                            }
+                                        @endphp
+
+                                        {{ $peringkatText }}
                                     </td>
 
                                     {{-- Kolom Tahun --}}

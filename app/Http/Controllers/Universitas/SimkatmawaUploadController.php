@@ -62,9 +62,10 @@ class SimkatmawaUploadController extends Controller
                 'nama_prestasi'  => $item->nama_prestasi,
                 'penyelenggara'  => $item->penyelenggara,
                 'tahun'          => $item->tahun_prestasi,
+                'feeder'         => $item->feeder ?? 0,
                 'simkatmawa'     => $item->simkatmawa,
                 'pdunsri'        => $item->pdunsri ?? 0,
-                'status_sync'    => ($item->simkatmawa == 1 && ($item->pdunsri ?? 0) == 1) ? 'Sudah sync All' : 'Belum sync',
+                'status_sync'    => $item->status_sync ?? 'Belum Sync',
                 'id_simkatmawa'  => $item->id_simkatmawa,
                 'id_pdunsri'     => $item->id_pdunsri ?? null
             ];

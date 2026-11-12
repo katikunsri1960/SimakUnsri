@@ -67,6 +67,8 @@ class PdUnsriUploadController extends Controller
         // Mapping Payload JSON Lengkap untuk PDUNSRI
         $record = [
             'id_prestasi'       => $d->id_prestasi,
+            'id_aktivitas'      => $d->id_aktivitas,
+            'id_mahasiswa'      => $d->id_mahasiswa,
             'nim'               => $nim,
             'nama_mahasiswa'    => strtoupper($d->nama_mahasiswa ?? ''),
             'nama_prestasi'     => $d->nama_prestasi,
