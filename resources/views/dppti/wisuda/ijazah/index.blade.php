@@ -69,7 +69,7 @@ Daftar Ijazah Wisudawan
                         <div class="mb-3">
                             <!-- <button class="btn btn-outline btn-success btn-sm me-2"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR IJAZAH (EXCEL)</button> -->
                             <button class="btn btn-outline btn-success btn-sm me-2" onclick="downloadExcel()"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR IJAZAH (EXCEL)</button>
-                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD IJAZAH (PDF)</button>
+                            {{--<button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD IJAZAH (PDF)</button>--}}
                         </div>
 
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">

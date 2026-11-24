@@ -482,9 +482,10 @@ class MonitoringAIPTController extends Controller
 
         $data = $query
             ->orderBy('nama_dosen', 'ASC')
-            // ->limit(2)
+            // ->limit(10)
             ->get();
 
+        // dd($data);
         $data->each(function ($dosen) {
 
             $jabatan = $dosen->jabatan_fungsional->first();

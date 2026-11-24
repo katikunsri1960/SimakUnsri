@@ -50,7 +50,8 @@ Data Dosen AIPT
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
-                                    <th class="text-center align-middle">PROGRAM STUDI<br>HOMEBASE</th>
+                                    <th class="text-center align-middle">PROGRAM STUDI</th>
+                                    <th class="text-center align-middle">HOMEBASE</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">GELAR DEPAN</th>
                                     <th class="text-center align-middle">GELAR BELAKANG</th>
@@ -92,6 +93,24 @@ Data Dosen AIPT
                                                 $gelar->gelar_belakang_s3,
                                             ])->filter()->implode(' ')
                                             : null;
+
+                                        // Ambil penugasan terbaru & nama prodi secara aman
+                                        $penugasan = $d->penugasan_terbaru;
+                                        $prodi = optional($penugasan)->prodi;
+
+                                        if ($prodi) {
+                                            $namaProdi = trim(($prodi->nama_jenjang_pendidikan ?? '') . ' - ' . ($prodi->nama_program_studi ?? ''), ' -');
+                                        } else {
+                                            $namaProdi = $penugasan->nama_program_studi ?? '-';
+                                        }
+
+                                        if ($penugasan && (string) $penugasan->a_sp_homebase === '1') {
+                                            $Homebase = 'Ya';
+                                        } elseif ($penugasan && (string) $penugasan->a_sp_homebase === '0') {
+                                            $Homebase = 'Tidak';
+                                        } else {
+                                            $Homebase = '-';
+                                        }
                                     @endphp
 
                                     @forelse ($d->jabatan_fungsional as $jabatan)
@@ -119,9 +138,14 @@ Data Dosen AIPT
                                                 {{ $no++ }}
                                             </td>
 
-                                            {{-- PROGRAM STUDI HOMEBASE --}}
+                                            {{-- PROGRAM STUDI --}}
                                             <td>
-                                                {{ optional($d->penugasan_terbaru)->a_sp_homebase ?? '-' }}
+                                                {{ $namaProdi }}
+                                            </td>
+
+                                            {{-- HOMEBASE --}}
+                                            <td class="text-center">
+                                                {{ $Homebase }}
                                             </td>
 
                                             {{-- NAMA --}}
@@ -131,12 +155,12 @@ Data Dosen AIPT
 
                                             {{-- GELAR DEPAN --}}
                                             <td>
-                                                {{ $gelarDepan ?? '-' }}
+                                                {{ $gelarDepan ?: '-' }}
                                             </td>
 
                                             {{-- GELAR BELAKANG --}}
                                             <td>
-                                                {{ $gelarBelakang ?? '-' }}
+                                                {{ $gelarBelakang ?: '-' }}
                                             </td>
 
                                             {{-- NIDN --}}
@@ -200,9 +224,14 @@ Data Dosen AIPT
                                                 {{ $no++ }}
                                             </td>
 
-                                            {{-- PROGRAM STUDI HOMEBASE --}}
+                                            {{-- PROGRAM STUDI --}}
                                             <td>
-                                                {{ optional($d->penugasan_terbaru)->a_sp_homebase ?? '-' }}
+                                                {{ $namaProdi }}
+                                            </td>
+
+                                            {{-- HOMEBASE --}}
+                                            <td class="text-center">
+                                                {{ $Homebase }}
                                             </td>
 
                                             {{-- NAMA --}}
@@ -212,12 +241,12 @@ Data Dosen AIPT
 
                                             {{-- GELAR DEPAN --}}
                                             <td>
-                                                {{ $gelarDepan ?? '-' }}
+                                                {{ $gelarDepan ?: '-' }}
                                             </td>
 
                                             {{-- GELAR BELAKANG --}}
                                             <td>
-                                                {{ $gelarBelakang ?? '-' }}
+                                                {{ $gelarBelakang ?: '-' }}
                                             </td>
 
                                             {{-- NIDN --}}
