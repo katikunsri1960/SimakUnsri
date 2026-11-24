@@ -214,7 +214,7 @@ Ajuan Yudisium Mahasiswa
                                                     </strong>
                                                 </p>
                                             @elseif($d->finalisasi_data == 1 && $d->approved == 0)
-                                                {{-- @if($d->bebas_pustaka && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
+                                                @if($d->bebas_pustaka && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
                                                     <div class="row d-flex justify-content-center">
                                                         <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
                                                         <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Yudisium" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
@@ -225,7 +225,27 @@ Ajuan Yudisium Mahasiswa
                                                     </span>
                                                     <p class="text-danger">
                                                         <strong>
+                                                        @php
+                                                            $prodi_profesi = [
+                                                                'be779246-fe70-4e66-8fa2-8929d97779a2', // Profesi Dokter Gigi
+                                                                '91360393-8632-4240-bed0-bfc707406efa', // Profesi Ners
+                                                                '98223413-b27d-4afe-a2b8-d0d80173506e', // Profesi Dokter
+                                                                'c9f5b196-dd7e-4788-a6e8-724046a1c344', // Profesi Akuntan
+                                                                'b68efc34-c0f0-4334-9970-e02d769e3f49', // Program Profesi Insinyur
+                                                                '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', // Pendidikan Profesi Apoteker
+                                                            ];
+
+                                                            $isProfesi = in_array(
+                                                                $d->riwayat_pendidikan->id_prodi ?? null,
+                                                                $prodi_profesi
+                                                            );
+                                                        @endphp
+
+                                                        @if($isProfesi)
+                                                            Mahasiswa belum mengurus Berkas Bebas Pustaka ke UPT Perpustakaan!
+                                                        @else
                                                             Mahasiswa belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                        @endif
                                                         </strong>
                                                     </p>
                                                 @elseif($d->bebas_pustaka && !$d->bebas_pustaka->link_repo)
@@ -237,11 +257,8 @@ Ajuan Yudisium Mahasiswa
                                                             Mahasiswa belum Upload Repository!
                                                         </strong>
                                                     </p>
-                                                @endif --}}
-                                                <div class="row d-flex justify-content-center">
-                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
-                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Yudisium" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
-                                                </div>
+                                                @endif
+                                                
                                             @elseif($d->finalisasi_data == 1 && $d->approved == 1)
                                                 <div class="row d-flex justify-content-center">
                                                     <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>

@@ -147,25 +147,30 @@ class YudisiumController extends Controller
         );
 
         // jika bukan profesi → wajib bebas pustaka
-        if (!$isProfesi) {
+        // if (!$isProfesi) {
 
-            $bebas_pustaka = BebasPustaka::where(
-                'id_registrasi_mahasiswa',
-                $id_reg
-            )->first();
+        //     $bebas_pustaka = BebasPustaka::where(
+        //         'id_registrasi_mahasiswa',
+        //         $id_reg
+        //     )->first();
 
-        } else {
+        // } else {
 
-            // profesi tidak wajib bebas pustaka
-            $bebas_pustaka = null;
-        }
+        //     // profesi tidak wajib bebas pustaka
+        //     $bebas_pustaka = null;
+        // }
         
         // 5 SYARAT BEBAS PUSTAKA
-        // if (!$bebas_pustaka) {
-        //     return redirect()
-        //         ->route('mahasiswa.dashboard')
-        //         ->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
-        // }
+        $bebas_pustaka = BebasPustaka::where(
+            'id_registrasi_mahasiswa',
+            $id_reg
+        )->first();
+
+        if (!$bebas_pustaka) {
+            return redirect()
+                ->route('mahasiswa.dashboard')
+                ->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+        }
 
         // 6 SYARAT BEBAS PUSTAKA TAPI BELUM WISUDA
         // if(!$wisuda){

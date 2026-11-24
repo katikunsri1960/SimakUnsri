@@ -836,7 +836,10 @@ class PrestasiMahasiswaController extends Controller
             $selected = $request->get('selected', []); // Array ID yang sudah dipilih
 
             $query = RiwayatPendidikan::with('prodi')
-                ->whereIN('id_jenis_keluar', [null, 1]);
+                    ->where(function ($q) {
+                        $q->whereNull('id_jenis_keluar')
+                        ->orWhere('id_jenis_keluar', 1);
+                    });
 
             // Kecualikan mahasiswa yang sudah dipilih
             if (!empty($selected) && is_array($selected)) {

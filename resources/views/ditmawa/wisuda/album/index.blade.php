@@ -80,10 +80,10 @@ Daftar Album Wisudawan
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <div class="mb-3">
+                        {{--<div class="mb-3">
                             <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PDF)</button>
                             <!-- <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PPT)</button> -->
-                        </div>
+                        </div>--}}
 
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
                             <thead>
